@@ -25,7 +25,6 @@ def get_name(path,loader):
         return toml.loads(zip.read("META-INF/mods.toml").decode("utf8"))["mods"][0]["displayName"]
     elif loader == "fabric":
         return json.loads(zip.read("fabric.mod.json"))["name"]
-    return None
 def find_mod(name,version,loader,regex_name): 
     data = None
     md = _find_modrinth(name,version,loader,regex_name)
@@ -50,7 +49,6 @@ def _find_modrinth(query,version,loader,regex_query):
                                     params={"loaders":f'["{loader}"]',"game_versions":f'["{version}"]'}).json()
                 if len(resp) > 0 and len(resp[0]["files"]) > 0:
                     return [resp[0]["files"][0]["filename"],requests.get(resp[0]["files"][0]["url"]).content]
-    return None
 def _find_curseforge(query,version,loader,regex_query): 
     resp = requests.get("https://api.curseforge.com/v1/mods/search",
             headers={"x-api-key": "$2a$10$WldWeyy9nRXLI9Dbjyr7UuES2Dy9fvKbBfMmQHUwHWNR8daJA2FI.","Accept":"application/json"},
@@ -67,7 +65,6 @@ def _find_curseforge(query,version,loader,regex_query):
                 params={"modLoaderType":loader.title(),"gameVersion":version}).json()["data"]
             if len(files) > 0:
                 return [files[0]["fileName"],requests.get(files[0]["downloadUrl"]).content]
-    return None
 
 window = Tk()
 window.title("ModpackUpdate")
@@ -115,7 +112,10 @@ def install_fabric(version):
     path = temporaryFilename(suffix=".jar")
     with open(path,"wb") as f:
         f.write(requests.get("https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.2/fabric-installer-0.11.2.jar").content)
-    os.system("java -jar "+path+" client -mcversion "+version)
+    os.system("start cmd /c java -jar "+path+" client -mcversion "+version)
+
+def get_installer_fabric(version):
+    return "0.11.2"
 
 def install_forge(version):
     url = {
@@ -145,7 +145,35 @@ def install_forge(version):
     path = temporaryFilename(suffix=".jar")
     with open(path,"wb") as f:
         f.write(requests.get(url).content)
-    os.system("java -jar "+path)
+    os.system("start javaw -jar "+path)
+
+def get_installer_forge(version):
+    versions = {
+        '1.20.1':"47.1.0",
+        '1.20':"46.0.14", 
+        '1.19.4':"45.1.0",
+        '1.19.3':"44.1.0", 
+        '1.19.2':"43.2.0", 
+        '1.19.1':"42.0.9", 
+        '1.19':"41.1.0", 
+        '1.18.2':"40.2.0", 
+        '1.18.1':"39.1.0", 
+        '1.18':"38.0.17", 
+        '1.17.1':"37.1.1", 
+        '1.16.5':"36.2.34", 
+        '1.16.4':"35.1.4", 
+        '1.16.3':"34.1.0", 
+        '1.16.2':"33.0.61", 
+        '1.16.1':"32.0.108", 
+        '1.15.2':"31.2.57", 
+        '1.15.1':"30.0.51", 
+        '1.15':"29.0.4", 
+        '1.14.4':"28.2.26", 
+        '1.14.3':"27.0.60", 
+        '1.14.2':"26.0.63"
+        }
+    if version in versions:
+        return versions[version]
 
 def start_modsupdate():
     global pb,old_loader,loader,folder,files,versions,window,btn_start
@@ -234,9 +262,18 @@ def start_modsupdate():
     Button(resp_win, text='Открыть папку', command=open_folder, relief=FLAT).place(x=10,y=y+30)
     y += 35
     if newerModLoader == "forge":
-        Button(resp_win, text='Установить Forge', command=lambda:install_forge(version), relief=FLAT).place(x=10,y=y+30)
+        ins = get_installer_forge(version)
+        if not (not ins): 
+            Button(resp_win, text='Установить Forge '+version+" "+ins, 
+                   command=lambda:install_forge(version), 
+                   relief=FLAT).place(x=10,y=y+30)
     elif newerModLoader == "fabric":
-        Button(resp_win, text='Установить Fabric', command=lambda:install_fabric(version), relief=FLAT).place(x=10,y=y+30)
+        ins = get_installer_fabric(version)
+        if not (not ins): 
+            Button(resp_win, 
+                text='Установить Fabric '+version+" "+ins, 
+                command=lambda:install_fabric(version), 
+                relief=FLAT).place(x=10,y=y+30)
     
     resp_win.geometry("350x"+str(y+90))
     resp_win.minsize(350,y+70)
