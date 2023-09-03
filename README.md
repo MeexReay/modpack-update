@@ -6,7 +6,7 @@
 1. Выберите версию, на которую будут обновлены моды
 2. Выберите ваш текущий загрузчик (Fabric/Forge)
 3. Выберите загрузчик на котором должны быть новые моды <br>
-${\color{silver}(к\spaceпримеру,\spaceс\spaceпомощью\spaceэтого\spaceможно\spaceперейти\spaceс\space Fabric\spaceна\space Forge,)}$
+${\color{silver}(к\spaceпримеру,\spaceс\spaceпомощью\spaceэтого\spaceможно\spaceперейти\spaceс\space Fabric\spaceна\space Forge,}$<br>
 ${\color{silver}\spaceно\spaceесли\spaceвам\spaceэто\spaceне\spaceнадо,\spaceуказывайте\spaceтекущий\spaceзагрузчик)}$
 4. Выберите моды которые надо обновить
 5. Выберите папку куда надо записать обновленные моды
