@@ -1,8 +1,6 @@
 # ModpackUpdate
 Программа которая обновляет моды Minecraft на новые версии, используя Modrinth и Curseforge
 
-
-
 ## Использование
 ![image](https://github.com/MeexReay/modpack-update/assets/127148610/76e62a0d-3f58-42f5-bc62-80b465e25f7b)
 1. Выберите версию, на которую будут обновлены моды
